@@ -21,7 +21,7 @@ export const handler: Handlers<Data> = {
     const tags = url.searchParams.get("tags") || "";
     const title = url.searchParams.get("title") || "";
 
-    const allAds = getAdvertisings();
+
 
     const newAds = createAdvertising({
       category,
@@ -30,7 +30,9 @@ export const handler: Handlers<Data> = {
       title,
     });
 
-    return ctx.render({ advertisingList: [...allAds, newAds], input: newAds });
+    const allAds = getAdvertisings();
+
+    return ctx.render({ advertisingList: allAds, input: newAds });
   },
 };
 
