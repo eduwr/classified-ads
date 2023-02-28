@@ -6,8 +6,6 @@ import {
 } from "../features/advertising/advertising.service.ts";
 import { Advertising } from "../features/advertising/advertising.types.ts";
 
-const NAMES = ["Alice", "Bob", "Charlie", "Dave", "Eve", "Frank"];
-
 interface Data {
   advertisingList: Advertising[];
   input: Partial<Advertising>;
@@ -15,13 +13,14 @@ interface Data {
 
 export const handler: Handlers<Data> = {
   GET(req, ctx) {
+
+    console.log({body:req, ctx})
+
     const url = new URL(req.url);
     const category = url.searchParams.get("category") || "";
     const description = url.searchParams.get("description") || "";
     const tags = url.searchParams.get("tags") || "";
     const title = url.searchParams.get("title") || "";
-
-
 
     const newAds = createAdvertising({
       category,
