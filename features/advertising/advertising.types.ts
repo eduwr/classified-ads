@@ -1,5 +1,5 @@
 export interface Advertising {
-    advertisingId: string;
+    advertisingId: number;
     title: string;
     description: string;
     category: string;

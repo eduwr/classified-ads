@@ -6,7 +6,7 @@ export const getAdvertisings: () => Advertising[] = () => advertising;
 
 export const createAdvertising = (input: Partial<Advertising>): Advertising => {
   const ads = {
-    advertisingId: (Math.random() * 1000).toString(),
+    advertisingId: advertising.length + 1,
     title: input.title || "",
     description: input.description || "",
     category: input.category || "",
@@ -18,14 +18,14 @@ export const createAdvertising = (input: Partial<Advertising>): Advertising => {
   return ads;
 };
 
-export const deleteAdvertising = (advertisingId: string): void => {
+export const deleteAdvertising = (advertisingId: number): void => {
   advertising = advertising.filter((ads) =>
     ads.advertisingId !== advertisingId
   );
 };
 
 export const updateAdvertising = (
-  advertisingId: string,
+  advertisingId: number,
   input: Partial<Advertising>,
 ): void => {
   const adIndex = advertising.findIndex((ads) =>

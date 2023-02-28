@@ -5,6 +5,7 @@ import {
   getAdvertisings,
 } from "../features/advertising/advertising.service.ts";
 import { Advertising } from "../features/advertising/advertising.types.ts";
+import AdvertisingCard from "../islands/Advertising.tsx";
 
 interface Data {
   advertisingList: Advertising[];
@@ -13,30 +14,33 @@ interface Data {
 
 export const handler: Handlers<Data> = {
   GET(req, ctx) {
-    return ctx.render({ advertisingList: getAdvertisings(), input: {} });
+    const ads = getAdvertisings();
+    return ctx.render({ advertisingList: ads, input: {} });
   },
-  POST(req, ctx) {
-    const url = new URL(req.url);
-    const category = url.searchParams.get("category") || "";
-    const description = url.searchParams.get("description") || "";
-    const tags = url.searchParams.get("tags") || "";
-    const title = url.searchParams.get("title") || "";
+  async POST(req, ctx) {
+    const formData = await req.formData();
 
-    const newAds = createAdvertising({
-      category,
-      description,
-      tags: tags.split(","),
-      title,
+    const category = formData.get("category") || "";
+    const description = formData.get("description") || "";
+    const tags = formData.get("tags") || "";
+    const title = formData.get("title") || "";
+
+    createAdvertising({
+      category: category.toString(),
+      description: description.toString(),
+      tags: tags.toString().split(", "),
+      title: title.toString(),
     });
 
     const allAds = getAdvertisings();
 
-    return ctx.render({ advertisingList: allAds, input: newAds });
+    return ctx.render({ advertisingList: allAds, input: {} });
   },
 };
 
 export default function Home({ data }: PageProps<Data>) {
   const { advertisingList, input } = data;
+
   return (
     <>
       <Head>
@@ -49,19 +53,14 @@ export default function Home({ data }: PageProps<Data>) {
           <label name="description">description:</label>
           <input type="text" name="description" value={input.description} />
           <label name="tags">tags:</label>
-          <input type="text" name="tags" value={input.tags} />
-          <label name="category">Category:</label>
-          <input type="text" name="category" value={input.category} />
+          <input type="text" name="tags" value={input.description} />
+          <label name="category">category:</label>
+          <input type="text" name="category" value={input.description} />
           <button type="sumbit">Create Ads</button>
         </form>
         <ul>
           {advertisingList.map((ad) => (
-            <li>
-              <h3>{ad.title}</h3>
-              <p>{ad.description}</p>
-              <p>{ad.tags.join(", ")}</p>
-              <p>{ad.category}</p>
-            </li>
+            <AdvertisingCard key={ad.advertisingId} advertising={ad} />
           ))}
         </ul>
       </div>
