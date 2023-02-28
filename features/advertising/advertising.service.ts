@@ -18,10 +18,12 @@ export const createAdvertising = (input: Partial<Advertising>): Advertising => {
   return ads;
 };
 
-export const deleteAdvertising = (advertisingId: number): void => {
-  advertising = advertising.filter((ads) =>
-    ads.advertisingId !== advertisingId
-  );
+export const deleteAdvertising = (advertisingId: number | string): void => {
+  let id = advertisingId;
+  if (typeof advertisingId === "string") {
+    id = parseInt(advertisingId, 10);
+  }
+  advertising = advertising.filter((ads) => ads.advertisingId !== id);
 };
 
 export const updateAdvertising = (
