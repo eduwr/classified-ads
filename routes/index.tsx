@@ -13,9 +13,9 @@ interface Data {
 
 export const handler: Handlers<Data> = {
   GET(req, ctx) {
-
-    console.log({body:req, ctx})
-
+    return ctx.render({ advertisingList: getAdvertisings(), input: {} });
+  },
+  POST(req, ctx) {
     const url = new URL(req.url);
     const category = url.searchParams.get("category") || "";
     const description = url.searchParams.get("description") || "";
@@ -43,7 +43,7 @@ export default function Home({ data }: PageProps<Data>) {
         <title>Classified Ads</title>
       </Head>
       <div>
-        <form>
+        <form method="post">
           <label name="title">title:</label>
           <input type="text" name="title" value={input.title} />
           <label name="description">description:</label>
