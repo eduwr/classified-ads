@@ -1,11 +1,8 @@
 import { Head } from "$fresh/runtime.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
-import {
-  createAdvertising,
-  getAdvertisings,
-} from "../features/advertising/advertising.service.ts";
 import { Advertising } from "../features/advertising/advertising.types.ts";
-import AdvertisingCard from "../islands/Advertising.tsx";
+import AdvertisingCard from "../islands/AdvertisingCard.tsx";
+import {advertisingModule} from "../features/advertising/advertising.module.ts";
 
 interface Data {
   advertisingList: Advertising[];
@@ -14,7 +11,7 @@ interface Data {
 
 export const handler: Handlers<Data> = {
   GET(req, ctx) {
-    const ads = getAdvertisings();
+    const ads = advertisingModule.index()
     return ctx.render({ advertisingList: ads, input: {} });
   },
   async POST(req, ctx) {
@@ -25,14 +22,15 @@ export const handler: Handlers<Data> = {
     const tags = formData.get("tags") || "";
     const title = formData.get("title") || "";
 
-    createAdvertising({
+    advertisingModule.create({
       category: category.toString(),
       description: description.toString(),
       tags: tags.toString().split(", "),
       title: title.toString(),
-    });
+    })
 
-    const allAds = getAdvertisings();
+
+    const allAds = advertisingModule.index()
 
     return ctx.render({ advertisingList: allAds, input: {} });
   },
@@ -56,7 +54,7 @@ export default function Home({ data }: PageProps<Data>) {
           <input type="text" name="tags" value={input.description} />
           <label name="category">category:</label>
           <input type="text" name="category" value={input.description} />
-          <button type="sumbit">Create Ads</button>
+          <button type="submit">Create Ads</button>
         </form>
         <ul>
           {advertisingList.map((ad) => (

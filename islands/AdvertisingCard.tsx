@@ -1,4 +1,3 @@
-import { useState } from "preact/hooks";
 import { Advertising } from "../features/advertising/advertising.types.ts";
 import { IS_BROWSER } from "$fresh/runtime.ts";
 

@@ -1,45 +1,35 @@
 import { Advertising } from "./advertising.types.ts";
+import { Repository } from "../common/repository.types.ts";
 
-let advertising: Advertising[] = [];
+export class AdvertisingService {
+  constructor(private advertisingRepository: Repository<Advertising>) {
+  }
+  index: () => Advertising[] = () => this.advertisingRepository.findAll();
 
-export const getAdvertisings: () => Advertising[] = () => advertising;
+  create = (input: Partial<Advertising>): Advertising => {
+    const ads = {
+      advertisingId: this.index().length + 1,
+      title: input.title || "",
+      description: input.description || "",
+      category: input.category || "",
+      tags: input.tags || [],
+    };
 
-export const createAdvertising = (input: Partial<Advertising>): Advertising => {
-  const ads = {
-    advertisingId: advertising.length + 1,
-    title: input.title || "",
-    description: input.description || "",
-    category: input.category || "",
-    tags: input.tags || [],
+    return this.advertisingRepository.create(ads);
   };
 
-  advertising.push(ads);
-
-  return ads;
-};
-
-export const deleteAdvertising = (advertisingId: number | string): void => {
-  let id = advertisingId;
-  if (typeof advertisingId === "string") {
-    id = parseInt(advertisingId, 10);
-  }
-  advertising = advertising.filter((ads) => ads.advertisingId !== id);
-};
-
-export const updateAdvertising = (
-  advertisingId: number,
-  input: Partial<Advertising>,
-): void => {
-  const adIndex = advertising.findIndex((ads) =>
-    ads.advertisingId === advertisingId
-  );
-
-  if (!adIndex) {
-    throw new Error("Advertising not found");
-  }
-
-  advertising[adIndex] = {
-    ...advertising[adIndex],
-    ...input,
+  delete = (advertisingId: number | string): void => {
+    let id = advertisingId;
+    if (typeof advertisingId === "string") {
+      id = parseInt(advertisingId, 10);
+    }
+    return this.advertisingRepository.delete(id);
   };
-};
+
+  update = (
+    advertisingId: number,
+    input: Partial<Advertising>,
+  ): Advertising => {
+    return this.advertisingRepository.update(advertisingId, input);
+  };
+}
