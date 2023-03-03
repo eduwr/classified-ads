@@ -4,21 +4,22 @@ import { Repository } from "../common/repository.types.ts";
 export class AdvertisingService {
   constructor(private advertisingRepository: Repository<Advertising>) {
   }
-  index: () => Advertising[] = () => this.advertisingRepository.findAll();
+  index: () => Promise<Advertising[]> = () => this.advertisingRepository.findAll();
 
-  create = (input: Partial<Advertising>): Advertising => {
+  create = (input: Partial<Advertising>) => {
     const ads = {
-      advertisingId: this.index().length + 1,
       title: input.title || "",
       description: input.description || "",
       category: input.category || "",
       tags: input.tags || [],
+      createdAt: new Date(),
+      updatedAt: new Date()
     };
 
     return this.advertisingRepository.create(ads);
   };
 
-  delete = (advertisingId: number | string): void => {
+  delete = (advertisingId: number | string) => {
     let id = advertisingId;
     if (typeof advertisingId === "string") {
       id = parseInt(advertisingId, 10);
@@ -29,7 +30,7 @@ export class AdvertisingService {
   update = (
     advertisingId: number,
     input: Partial<Advertising>,
-  ): Advertising => {
+  ) => {
     return this.advertisingRepository.update(advertisingId, input);
   };
 }

@@ -1,8 +1,7 @@
 import { AdvertisingService } from "./advertising.service.ts";
 import { AdvertisingRepository } from "./advertising.repository.ts";
-
-let advertising = [];
+import { AdvertisingModel } from "./advertising.model.ts";
 
 export const advertisingModule = new AdvertisingService(
-  new AdvertisingRepository(advertising),
+  new AdvertisingRepository(AdvertisingModel),
 );

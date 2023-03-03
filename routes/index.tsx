@@ -2,7 +2,7 @@ import { Head } from "$fresh/runtime.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { Advertising } from "../features/advertising/advertising.types.ts";
 import AdvertisingCard from "../islands/AdvertisingCard.tsx";
-import {advertisingModule} from "../features/advertising/advertising.module.ts";
+import { advertisingModule } from "../features/advertising/advertising.module.ts";
 
 interface Data {
   advertisingList: Advertising[];
@@ -10,8 +10,8 @@ interface Data {
 }
 
 export const handler: Handlers<Data> = {
-  GET(req, ctx) {
-    const ads = advertisingModule.index()
+  async GET(req, ctx) {
+    const ads = await advertisingModule.index();
     return ctx.render({ advertisingList: ads, input: {} });
   },
   async POST(req, ctx) {
@@ -27,10 +27,9 @@ export const handler: Handlers<Data> = {
       description: description.toString(),
       tags: tags.toString().split(", "),
       title: title.toString(),
-    })
+    });
 
-
-    const allAds = advertisingModule.index()
+    const allAds = await advertisingModule.index();
 
     return ctx.render({ advertisingList: allAds, input: {} });
   },
@@ -58,7 +57,7 @@ export default function Home({ data }: PageProps<Data>) {
         </form>
         <ul>
           {advertisingList.map((ad) => (
-            <AdvertisingCard key={ad.advertisingId} advertising={ad} />
+            <AdvertisingCard key={ad._id?.toString()} advertising={ad} />
           ))}
         </ul>
       </div>

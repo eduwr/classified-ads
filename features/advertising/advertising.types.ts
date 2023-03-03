@@ -1,7 +1,11 @@
+import { ObjectId } from "../../deps.ts";
+
 export interface Advertising {
-  advertisingId: number;
+  _id?: ObjectId;
   title: string;
   description: string;
   category: string;
   tags: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
